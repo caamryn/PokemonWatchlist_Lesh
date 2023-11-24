@@ -10,45 +10,62 @@
         android:id="@+id/divider"
         android:layout_width="409dp"
         android:layout_height="1dp"
+        android:layout_marginStart="1dp"
         android:background="?android:attr/listDivider"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="131dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/divider2" />
 
     <View
         android:id="@+id/divider2"
         android:layout_width="1dp"
-        android:layout_height="729dp"
+        android:layout_height="604dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="129dp"
         android:background="?android:attr/listDivider"
-        tools:layout_editor_absoluteX="205dp"
-        tools:layout_editor_absoluteY="1dp" />
+        app:layout_constraintStart_toEndOf="@+id/listScroll"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/name_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="59dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="sans-serif-black"
         android:text="TextView"
-        tools:layout_editor_absoluteX="269dp"
-        tools:layout_editor_absoluteY="156dp" />
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/divider2"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="169dp"
         android:layout_height="170dp"
-        tools:layout_editor_absoluteX="223dp"
-        tools:layout_editor_absoluteY="191dp"
+        android:layout_marginStart="17dp"
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toEndOf="@+id/divider2"
+        app:layout_constraintTop_toBottomOf="@+id/name_TV"
         tools:srcCompat="@tools:sample/avatars" />
 
     <ScrollView
         android:id="@+id/listScroll"
         android:layout_width="203dp"
         android:layout_height="597dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="133dp">
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/listV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
     </ScrollView>
 
     <TextView
@@ -160,5 +177,26 @@
         android:text="TextView"
         app:layout_constraintStart_toEndOf="@+id/abilityLabel"
         app:layout_constraintTop_toBottomOf="@+id/move_TV" />
+
+    <EditText
+        android:id="@+id/input_ET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="51dp"
+        android:ems="10"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/search_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="52dp"
+        android:text="Search"
+        app:layout_constraintStart_toEndOf="@+id/input_ET"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
