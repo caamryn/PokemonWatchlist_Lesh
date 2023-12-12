@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.ANRequest;
@@ -28,6 +29,8 @@ import java.util.LinkedList;
 
 public class MainActivity extends AppCompatActivity {
     Button search;
+    Button clear;
+    Button clearList;
     EditText input;
     ListView listView;
     LinkedList<PokeEntry> pokeList;
@@ -39,8 +42,17 @@ public class MainActivity extends AppCompatActivity {
 
         search = findViewById(R.id.search_button);
         search.setOnClickListener(searchListener);
+        clear = findViewById(R.id.clear_button);
+        clear.setOnClickListener(clearListener);
+        clearList = findViewById(R.id.clearlist_button);
+        clearList.setOnClickListener(clearListListener);
         listView = findViewById(R.id.listV);
         input = findViewById(R.id.input_ET);
+
+        search.setBackgroundColor(getResources().getColor(R.color.red));
+        clear.setBackgroundColor(getResources().getColor(R.color.red));
+        clearList.setBackgroundColor(getResources().getColor(R.color.red));
+
 
         pokeList = new LinkedList<>();
         listView.setOnItemClickListener(listListener);
@@ -52,11 +64,11 @@ public class MainActivity extends AppCompatActivity {
             String pokemon = input.getText().toString();
             makeRequest(pokemon);
             if(check(pokemon)){
-               // addPokemon(pokemon);
+               addPokemon(pokemon);
             }
-
-            //String imageURL = "";
-            //ImageView iv = findViewById(R.id.imageView);
+            else{
+                Toast.makeText(getApplicationContext(), "The pokemon entered is invalid", Toast.LENGTH_SHORT).show();
+            }
         }
     };
 
@@ -72,9 +84,14 @@ public class MainActivity extends AppCompatActivity {
                     String name = response.getString("name");
                     Integer id = response.getInt("id");
 
-                   // PokeEntry temp = new PokeEntry(name, id);
-                   // pokeList.add(temp);
                     pokeList.add(new PokeEntry(name, id));
+                    if(listView.getAdapter() != null){
+                        ((ArrayAdapter<PokeEntry>) listView.getAdapter()).notifyDataSetChanged();
+                    }
+                    else{
+                        ArrayAdapter<PokeEntry> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_list_item_1, pokeList);
+                        listView.setAdapter(adapter);
+                    }
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -85,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-        ArrayAdapter<PokeEntry> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, pokeList);
-        listView.setAdapter(adapter);
+//        ArrayAdapter<PokeEntry> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, pokeList);
+//        listView.setAdapter(adapter);
     }
 
     private void makeRequest(String pokemon){
@@ -110,12 +127,12 @@ public class MainActivity extends AppCompatActivity {
                     Picasso.get().load(image).into(iv);
                     //set text views
                     ((TextView) findViewById(R.id.name_TV)).setText(name);
-                    ((TextView) findViewById(R.id.number_TV)).setText(id);
-                    ((TextView) findViewById(R.id.weight_TV)).setText(weight);
-                    ((TextView) findViewById(R.id.height_TV)).setText(height);
+                    ((TextView) findViewById(R.id.number_TV)).setText(id.toString());
+                    ((TextView) findViewById(R.id.weight_TV)).setText(weight.toString());
+                    ((TextView) findViewById(R.id.height_TV)).setText(height.toString());
                     ((TextView) findViewById(R.id.move_TV)).setText(move);
                     ((TextView) findViewById(R.id.ability_TV)).setText(ability);
-                    ((TextView) findViewById(R.id.base_TV)).setText(base_XP);
+                    ((TextView) findViewById(R.id.base_TV)).setText(base_XP.toString());
 
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
@@ -124,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(ANError anError) {
-
+                Toast.makeText(getApplicationContext(), "Please enter a valid pokemon name or id", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -183,12 +200,32 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             PokeEntry selected = (PokeEntry) parent.getItemAtPosition(position);
-            makeRequest(selected.getName().toString());
+            makeRequest(selected.getName());  //.toString()
         }
     };
-     //on click listener for list view that gets name of selected and makes request
-    // an array of pokemon
-    // under search add instance of pokemon
-    //check for duplicates
+
+    View.OnClickListener clearListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ((TextView) findViewById(R.id.name_TV)).setText("");
+            ((TextView) findViewById(R.id.number_TV)).setText("");
+            ((TextView) findViewById(R.id.weight_TV)).setText("");
+            ((TextView) findViewById(R.id.height_TV)).setText("");
+            ((TextView) findViewById(R.id.move_TV)).setText("");
+            ((TextView) findViewById(R.id.ability_TV)).setText("");
+            ((TextView) findViewById(R.id.base_TV)).setText("");
+            ImageView iv = findViewById(R.id.imageView);
+            iv.setImageDrawable(null);
+            input.setText("");
+        }
+    };
+
+    View.OnClickListener clearListListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            pokeList.removeAll(pokeList);
+            ((ArrayAdapter<PokeEntry>) listView.getAdapter()).notifyDataSetChanged();
+        }
+    };
 
 }

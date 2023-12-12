@@ -18,7 +18,7 @@ public class PokeEntry {
         return id;
     }
 
-    public String display(){
+    public String toString(){
         String s = name + " " + id;
         return s;
     }
